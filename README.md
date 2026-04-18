@@ -111,6 +111,16 @@ The architecture can be extended later using APIs such as:
 
 ---
 
+## Project Structure
+
+nova-context-ai/
+├── main.py
+├── prompt_engine.py
+├── context_detector.py
+├── test_response.py
+├── requirements.txt
+├── README.md
+
 ## Conclusion
 **NOVA** -  demonstrates that even without external AI models, it is possible to design a system that simulates context-aware and emotionally adaptive conversation.
 
@@ -122,6 +132,7 @@ The project emphasizes the importance of conversational design, state management
 (in Terminal):
 ```bash
 python main.py
+python test_response.py
 
 ## Testing
 

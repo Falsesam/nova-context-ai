@@ -1,11 +1,5 @@
 """
 Main entry point for NOVA assistant.
-
-This file handles:
-- user interaction loop
-- context detection (intent + mood)
-- conversation state tracking
-- response generation
 """
 
 import time
@@ -14,66 +8,60 @@ from context_detector import detect_context
 from prompt_engine import generate_response
 
 
-print("Hi, I'm NOVA - the Context-Aware AI Assistant 🤖")
-print("Type 'end' to end the chat ❤️\n")
+def run_chat():
+    print("Hi, I'm NOVA - the Context-Aware AI Assistant 🤖")
+    print("Type 'end' to end the chat ❤️\n")
 
+    conversation_history = []
 
-# stores full conversation
-conversation_history = []
+    conversation_state = {
+        "topic": None,
+        "emotion_level": 0
+    }
 
-# tracks ongoing state
-conversation_state = {
-    "topic": None,
-    "emotion_level": 0
-}
+    while True:
+        user_input = input("You: ")
 
+        if user_input.lower() == "end":
+            print("Goodbye 👋")
+            break
 
-while True:
-    # take user input
-    user_input = input("You: ")
+        if user_input.strip() == "":
+            continue
 
-    # exit condition
-    if user_input.lower() == "end":
-        print("Goodbye 👋")
-        break
+        # detect context
+        intent, mood = detect_context(user_input)
 
-    # ignore empty input
-    if user_input.strip() == "":
-        continue
+        # update state
+        conversation_state["topic"] = intent
 
-    # -------- STEP 1: Detect context --------
-    intent, mood = detect_context(user_input)
+        if intent == "emotional":
+            conversation_state["emotion_level"] += 1
+        else:
+            conversation_state["emotion_level"] = max(
+                0, conversation_state["emotion_level"] - 0.2
+            )
 
-    # -------- STEP 2: Update state --------
-    conversation_state["topic"] = intent
+        # store input
+        conversation_history.append({"user": user_input})
 
-    # track emotional intensity over time
-    if intent == "emotional":
-        conversation_state["emotion_level"] += 1
-    else:
-        # slowly decay emotion instead of resetting
-        conversation_state["emotion_level"] = max(
-            0,
-            conversation_state["emotion_level"] - 0.2
+        # generate response
+        response = generate_response(
+            user_input,
+            intent,
+            mood,
+            conversation_history,
+            conversation_state
         )
 
-    # -------- STEP 3: Store user input --------
-    conversation_history.append({"user": user_input})
+        # save response
+        conversation_history[-1]["nova"] = response
 
-    # -------- STEP 4: Generate response --------
-    response = generate_response(
-        user_input,
-        intent,
-        mood,
-        conversation_history,
-        conversation_state
-    )
+        # typing effect
+        print("\nNOVA is typing...", end="", flush=True)
+        time.sleep(random.uniform(0.8, 1.8))
+        print("\rNOVA:", response, " " * 10, "\n")
 
-    # save response into history
-    conversation_history[-1]["nova"] = response
 
-    # -------- STEP 5: Simulate typing --------
-    print("\nNOVA is typing...", end="", flush=True)
-    time.sleep(random.uniform(0.8, 1.8))
-
-    print("\rNOVA:", response, " " * 10, "\n")
+if __name__ == "__main__":
+    run_chat()
