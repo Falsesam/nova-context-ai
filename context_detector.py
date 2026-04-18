@@ -1,4 +1,11 @@
 def detect_context(user_input):
+    """
+    Detects user intent and mood from input text.
+
+    Returns:
+        intent (str): emotional / study / productivity / casual
+        mood (str): sad / confused / neutral etc.
+    """
     text = user_input.lower()
 
     # intent detection

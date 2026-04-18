@@ -122,3 +122,12 @@ The project emphasizes the importance of conversational design, state management
 (in Terminal):
 ```bash
 python main.py
+
+## Testing
+
+Basic test cases are included in `test_cases.py` to validate context detection.
+
+Run:
+
+```bash
+python test_cases.py
